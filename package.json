@@ -1,0 +1,35 @@
+{
+  "name": "aw-react-router",
+  "version": "0.0.1",
+  "description": "create react routes with config",
+  "main": "dist/index.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/youthcity/ts-hi.git"
+  },
+  "keywords": [
+    "typescript",
+    "react",
+    "react-router"
+  ],
+  "scripts": {
+    "build": "rm -fr lib && mkdir lib && tsc -p tsconfig.json"
+  },
+  "author": "Away0x",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Away0x/aw-react-router/issues"
+  },
+  "homepage": "https://github.com/Away0x/aw-react-router",
+  "dependencies": {
+    "@types/react": "^16.8.23",
+    "@types/react-router": "^5.0.3",
+    "history": "^4.9.0",
+    "p-min-delay": "^3.1.0",
+    "react": "^16.8.6",
+    "react-router": "^5.0.1"
+  },
+  "devDependencies": {
+    "typescript": "^3.5.3"
+  }
+}
