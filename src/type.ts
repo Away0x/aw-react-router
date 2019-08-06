@@ -1,5 +1,5 @@
 import React from 'react';
-import { RouteComponentProps } from 'react-router';
+import { RouteComponentProps } from 'react-router-dom';
 import { History } from 'history';
 
 /** 渲染 react-router Route 组件 */
@@ -54,7 +54,7 @@ export interface AWRouteState<Meta = any> {
 
 /** AWRouter 的配置参数 */
 export interface AWRouterOptions {
-  history?: History
+  mode?: 'hash' | 'history'
   middlewares?: AWMiddlewareFunc[]
   notFoundRouteName?: string // 404 路由的 name
   hasSwitch?: boolean

@@ -2,23 +2,24 @@
   "compilerOptions": {
     "target": "es5",
     "module": "commonjs",
-    "strict": true,
+    "moduleResolution": "node",
     "jsx": "react",
     "declaration": true,
+    "pretty": true,
+    "rootDir": "src",
+    "sourceMap": false,
+    "strict": true,
+    "noImplicitReturns": true,
+    "noImplicitAny": false,
+    "noFallthroughCasesInSwitch": true,
     "esModuleInterop": true,
-    "outDir": "./lib",
+    "outDir": "lib",
     "lib": [
-      "dom",
-      "dom.iterable",
-      "esnext",
-      "scripthost"
-    ],
+      "es2018",
+      "dom"
+    ]
   },
-  "include": [
-    "src"
-  ],
   "exclude": [
-    "test",
-    "example"
+    "node_modules"
   ]
 }

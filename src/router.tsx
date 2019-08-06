@@ -1,6 +1,6 @@
 import React from 'react';
-import { History, createHashHistory } from 'history';
-import { RouteComponentProps, Route, Redirect, Switch } from 'react-router';
+import { History, createHashHistory, createBrowserHistory } from 'history';
+import { RouteComponentProps, Route, Redirect, Switch, HashRouter, BrowserRouter } from 'react-router-dom';
 import {
   AWRouteConfig,
   AWRouteInfo,
@@ -26,6 +26,8 @@ class AWRouter {
     return this._instance!;
   }
 
+  /** mode */
+  private mode: 'hash' | 'history' = 'hash';
   /** 存储路由配置 */
   private routes: AWRouteConfig[] = [];
   /** 路由信息表 */
@@ -41,14 +43,15 @@ class AWRouter {
   /** history */
   private history!: History;
   /** 需要被缓存的路由 name */
-  private cachedRouteNameList: string[] = [];
+  // private cachedRouteNameList: string[] = [];
 
   /** 加载路由 */
   public load(routes: AWRouteConfig[], options: AWRouterOptions = {}) {
     if (this.routes.length) {
       throw new Error('AWRouter load error: 路由已经加载过了');
     }
-    this.history = options.history ? options.history : createHashHistory();
+    this.mode = options.mode || 'hash';
+    this.history = this.mode === 'hash' ? createHashHistory() : createBrowserHistory();
     this.middlewares = options.middlewares || [];
     this.notFoundRouteName = options.notFoundRouteName || DEFAULT_NOT_FOUND_ROUTE_NAME;
     this.hasSwitch = options.hasSwitch === undefined ? true : options.hasSwitch;
@@ -80,7 +83,7 @@ class AWRouter {
     }
 
     return ({ cache }: Partial<RouteViewFuncOptions> = {}) => {
-      this.cachedRouteNameList = cache || []; // 需要被缓存的路由 name
+      // this.cachedRouteNameList = cache || []; // 需要被缓存的路由 name
 
       let defaultRoute: JSX.Element | null = null;
       const views = routes.map((route) => {
@@ -165,6 +168,25 @@ class AWRouter {
     const Com = route.component as React.ComponentType<any>
     return (
       <Com key={route.name} {...routeProps} routerView={routeViewFunc} />
+    );
+  }
+
+  /** 渲染根路由 */
+  public renderRootRoute() {
+    const routes = this.render()();
+
+    if (this.mode === 'hash') {
+      return (
+        <HashRouter>
+          {routes}
+        </HashRouter>
+      );
+    }
+
+    return (
+      <BrowserRouter>
+        {routes}
+      </BrowserRouter>
     );
   }
 
