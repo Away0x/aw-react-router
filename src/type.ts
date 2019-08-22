@@ -60,11 +60,6 @@ export interface AWRouterOptions {
   hasSwitch?: boolean
 }
 
-/** 操作 history 的参数 */
-export interface HistoryOptions {
-  replace?: boolean
-}
-
 /** router view 的配置 */
 export interface RouteViewFuncOptions {
   cache: string[] // 需要缓存的路由 name 数组

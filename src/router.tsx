@@ -1,5 +1,4 @@
 import React from 'react';
-import { History, createHashHistory, createBrowserHistory } from 'history';
 import { RouteComponentProps, Route, Redirect, Switch, HashRouter, BrowserRouter } from 'react-router-dom';
 import {
   AWRouteConfig,
@@ -8,7 +7,6 @@ import {
   AWRouteViewFunc,
   AWMiddlewareFunc,
   AWRouterOptions,
-  HistoryOptions,
   RouteViewFuncOptions,
 } from './type';
 
@@ -40,8 +38,6 @@ class AWRouter {
   private notFoundRouteName = DEFAULT_NOT_FOUND_ROUTE_NAME;
   /** 顶层路由时，是否渲染 switch 组件，不渲染的话，自己就可以定义更多 Route(比较方便定制) */
   private hasSwitch = true;
-  /** history */
-  private history!: History;
   /** 需要被缓存的路由 name */
   // private cachedRouteNameList: string[] = [];
 
@@ -51,7 +47,6 @@ class AWRouter {
       throw new Error('AWRouter load error: 路由已经加载过了');
     }
     this.mode = options.mode || 'hash';
-    this.history = this.mode === 'hash' ? createHashHistory() : createBrowserHistory();
     this.middlewares = options.middlewares || [];
     this.notFoundRouteName = options.notFoundRouteName || DEFAULT_NOT_FOUND_ROUTE_NAME;
     this.hasSwitch = options.hasSwitch === undefined ? true : options.hasSwitch;
@@ -216,8 +211,8 @@ class AWRouter {
   }
 
   /** 根据路由 name 查找路由信息 */
-  public findMap(names: string[]): {[k:string]: AWRouteInfo<any>} {
-    const routeInfos: {[k:string]: AWRouteInfo} = {};
+  public findMap(names: string[]): { [k: string]: AWRouteInfo<any> } {
+    const routeInfos: { [k: string]: AWRouteInfo } = {};
     this.getRouteInfos().forEach(r => {
       if (names.indexOf(r.name) !== -1) {
         routeInfos[r.name] = r;
@@ -225,6 +220,35 @@ class AWRouter {
     });
 
     return routeInfos;
+  }
+
+  /** 获取 404 的 path */
+  public getNotFoundRoutePath(): string {
+    let notFoundPath = DEFAULT_NOT_FOUND_ROUTE_PATH
+    const notFoundPRoute = this.find(this.notFoundRouteName);
+    if (notFoundPRoute && notFoundPRoute.fullPath) {
+      notFoundPath = notFoundPRoute.fullPath;
+    }
+
+    return notFoundPath;
+  }
+
+  /** 根据路由 name 查找路由 fullpath */
+  public mustFindPath(name: string): string | null {
+    const resultRoute = this.find(name);
+    if (!resultRoute || !resultRoute.fullPath) {
+      return null;
+    }
+
+    return resultRoute.fullPath;
+  }
+
+  /** 根据路由 name 查找路由 fullpath */
+  public findPath(name: string, defaultPath = ''): string {
+    const dp = defaultPath || this.getNotFoundRoutePath();
+    const resultPath = this.mustFindPath(name);
+
+    return resultPath || dp;
   }
 
   /** 存储路由信息表 */
@@ -308,39 +332,6 @@ class AWRouter {
 
     return route.fullPath || '';
   }
-
-  // ------------------------------- history -------------------------------
-  public push(path: string, options: HistoryOptions = {}) {
-    if (options.replace) {
-      this.history.replace(path);
-      return;
-    }
-
-    this.history.push(path);
-  }
-
-  public pushByName(name: string, options: HistoryOptions = {}) {
-    const route = this.find(name);
-    if (!route) {
-      console.warn(`AWRouter history pushName error: route name ${name} not found`);
-      const notFoundPRoute = this.find(this.notFoundRouteName);
-      if (!notFoundPRoute) {
-        this.history.push(DEFAULT_NOT_FOUND_ROUTE_PATH);
-        return;
-      }
-      this.history.push(notFoundPRoute.fullPath);
-      return;
-    }
-
-    if (options.replace) {
-      this.history.replace(route.fullPath);
-      return;
-    }
-
-    this.history.push(route.fullPath);
-  }
 }
 
 export default AWRouter;
-
-(window as any).__AWRouter__ = AWRouter;
