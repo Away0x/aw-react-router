@@ -1,5 +1,5 @@
 /// <reference types="react" />
-import { AWRouteConfig, AWRouteInfo, AWRouteState, AWRouteViewFunc, AWRouterOptions, HistoryOptions } from './type';
+import { AWRouteConfig, AWRouteInfo, AWRouteState, AWRouteViewFunc, AWRouterOptions } from './type';
 declare class AWRouter {
     private static _instance;
     static instance(): AWRouter;
@@ -15,10 +15,6 @@ declare class AWRouter {
     private middlewares;
     /** 路由未找到时 redirect 去的地方 */
     private notFoundRouteName;
-    /** 顶层路由时，是否渲染 switch 组件，不渲染的话，自己就可以定义更多 Route(比较方便定制) */
-    private hasSwitch;
-    /** history */
-    private history;
     /** 需要被缓存的路由 name */
     /** 加载路由 */
     load(routes: AWRouteConfig[], options?: AWRouterOptions): void;
@@ -40,6 +36,12 @@ declare class AWRouter {
     findMap(names: string[]): {
         [k: string]: AWRouteInfo<any>;
     };
+    /** 获取 404 的 path */
+    getNotFoundRoutePath(): string;
+    /** 根据路由 name 查找路由 fullpath */
+    mustFindPath(name: string): string | null;
+    /** 根据路由 name 查找路由 fullpath */
+    findPath(name: string, defaultPath?: string): string;
     /** 存储路由信息表 */
     private setRouteInfos;
     /** 查找 route 配置项 */
@@ -48,7 +50,5 @@ declare class AWRouter {
     private applyMiddleware;
     /** 根据 name 获取 path */
     getPathByName(name: string): string;
-    push(path: string, options?: HistoryOptions): void;
-    pushByName(name: string, options?: HistoryOptions): void;
 }
 export default AWRouter;

@@ -36,8 +36,6 @@ class AWRouter {
   private middlewares: AWMiddlewareFunc[] = [];
   /** 路由未找到时 redirect 去的地方 */
   private notFoundRouteName = DEFAULT_NOT_FOUND_ROUTE_NAME;
-  /** 顶层路由时，是否渲染 switch 组件，不渲染的话，自己就可以定义更多 Route(比较方便定制) */
-  private hasSwitch = true;
   /** 需要被缓存的路由 name */
   // private cachedRouteNameList: string[] = [];
 
@@ -49,7 +47,6 @@ class AWRouter {
     this.mode = options.mode || 'hash';
     this.middlewares = options.middlewares || [];
     this.notFoundRouteName = options.notFoundRouteName || DEFAULT_NOT_FOUND_ROUTE_NAME;
-    this.hasSwitch = options.hasSwitch === undefined ? true : options.hasSwitch;
 
     this.routes = routes;
     this.setRouteInfos(routes);
@@ -60,7 +57,6 @@ class AWRouter {
     const renderView = this.renderView.bind(this);
     const find = this.find.bind(this);
     const notFoundRouteName = this.notFoundRouteName;
-    const hasSwitch = this.hasSwitch;
     let groupPath = '';
 
     const isRootRoute = !name; // 是顶层路由
@@ -126,14 +122,6 @@ class AWRouter {
         } else {
           views.push(<Redirect key={`${name || 'root'}NotFoundRedirect`} to={nofFoundRoutePath} />)
         }
-      }
-
-      // switch
-      if (isRootRoute) {
-        if (hasSwitch) {
-          return <Switch>{views}</Switch>;
-        }
-        return views;
       }
 
       // 子路由包装 switch

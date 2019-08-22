@@ -1,10 +1,5 @@
 import React, { Suspense, lazy, FC, ReactNode } from 'react';
 import { RouteComponentProps } from 'react-router-dom';
-// import {
-//   RouteComponentProps,
-//   // matchPath,
-//   // match,
-// } from 'react-router-dom';
 import PminDelay from 'p-min-delay';
 
 import { LayoutProps, AWRouteLayout } from './type';
