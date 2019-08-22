@@ -13,34 +13,34 @@ import {
 const DEFAULT_NOT_FOUND_ROUTE_NAME = '404';
 const DEFAULT_NOT_FOUND_ROUTE_PATH = '/404';
 
-class AWRouter {
+class AWRouter<Meta = {}> {
   private static _instance: AWRouter | null = null;
 
-  public static instance(): AWRouter {
+  public static instance<M = {}>(): AWRouter<M> {
     if (this._instance === null) {
       this._instance = new this();
     }
 
-    return this._instance!;
+    return this._instance! as AWRouter<any>;
   }
 
   /** mode */
   private mode: 'hash' | 'history' = 'hash';
   /** 存储路由配置 */
-  private routes: AWRouteConfig[] = [];
+  private routes: AWRouteConfig<any>[] = [];
   /** 路由信息表 */
-  private routeInfos: AWRouteInfo[] = [];
+  private routeInfos: AWRouteInfo<any>[] = [];
   /** 当前路由的状态 */
-  private routeState: AWRouteState | null = null;
+  private routeState: AWRouteState<any> | null = null;
   /** 存储全局中间件 */
-  private middlewares: AWMiddlewareFunc[] = [];
+  private middlewares: AWMiddlewareFunc<Meta>[] = [];
   /** 路由未找到时 redirect 去的地方 */
   private notFoundRouteName = DEFAULT_NOT_FOUND_ROUTE_NAME;
   /** 需要被缓存的路由 name */
   // private cachedRouteNameList: string[] = [];
 
   /** 加载路由 */
-  public load(routes: AWRouteConfig[], options: AWRouterOptions = {}) {
+  public load(routes: AWRouteConfig<Meta>[], options: AWRouterOptions = {}): AWRouter<Meta> {
     if (this.routes.length) {
       throw new Error('AWRouter load error: 路由已经加载过了');
     }
@@ -50,6 +50,7 @@ class AWRouter {
 
     this.routes = routes;
     this.setRouteInfos(routes);
+    return this;
   }
 
   /** 渲染 routes */
@@ -130,7 +131,7 @@ class AWRouter {
   }
 
   /** render view 方法 */
-  private renderView(fullPath: string, route: AWRouteConfig, routeProps: RouteComponentProps) {
+  private renderView(fullPath: string, route: AWRouteConfig<any>, routeProps: RouteComponentProps) {
     const routeViewFunc = this.render(route.name);
     const state: AWRouteState = {
       name: route.name,
@@ -179,17 +180,17 @@ class AWRouter {
   }
 
   /** 获取当前路由的状态 */
-  public getCurrentState(): AWRouteState | null {
+  public getCurrentState(): AWRouteState<Meta> | null {
     return this.routeState || null;
   }
 
   /** 获取路由信息表 */
-  public getRouteInfos(): AWRouteInfo[] {
+  public getRouteInfos(): AWRouteInfo<Meta>[] {
     return this.routeInfos || [];
   }
 
   /** 根据路由 name 查找路由信息 */
-  public find(name: string): AWRouteInfo | null {
+  public find(name: string): AWRouteInfo<Meta> | null {
     const r = this.getRouteInfos().find((c) => c.name === name);
     if (!r || !r.fullPath) {
       return null;
@@ -199,8 +200,8 @@ class AWRouter {
   }
 
   /** 根据路由 name 查找路由信息 */
-  public findMap(names: string[]): { [k: string]: AWRouteInfo<any> } {
-    const routeInfos: { [k: string]: AWRouteInfo } = {};
+  public findMap(names: string[]): { [k: string]: AWRouteInfo<Meta> } {
+    const routeInfos: { [k: string]: AWRouteInfo<any> } = {};
     this.getRouteInfos().forEach(r => {
       if (names.indexOf(r.name) !== -1) {
         routeInfos[r.name] = r;
@@ -240,7 +241,7 @@ class AWRouter {
   }
 
   /** 存储路由信息表 */
-  private setRouteInfos(routes: AWRouteConfig[]) {
+  private setRouteInfos(routes: AWRouteConfig<any>[]) {
     const result: AWRouteInfo[] = [];
     const fn = (c: AWRouteConfig, groupPath = '') => {
       const has = result.find((r) => r.name === c.name);
@@ -297,7 +298,7 @@ class AWRouter {
   }
 
   /** 执行中间件 */
-  private applyMiddleware(state: AWRouteState, middlewares: AWMiddlewareFunc[]) {
+  private applyMiddleware(state: AWRouteState<any>, middlewares: AWMiddlewareFunc<any>[]) {
     for (let i = 0; i < middlewares.length; i++) {
       const view = middlewares[i](state);
       if (view) {

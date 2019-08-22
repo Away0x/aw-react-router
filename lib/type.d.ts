@@ -6,7 +6,7 @@ export declare type AWRouteViewFunc = () => JSX.Element[] | JSX.Element;
  * 中间件函数
  * 返回值不为 null 时，中断中间件，渲染 view
  */
-export declare type AWMiddlewareFunc = (params: AWRouteState<any>) => null | JSX.Element;
+export declare type AWMiddlewareFunc<Meta = {}> = (params: AWRouteState<Meta>) => null | JSX.Element;
 /** 路由渲染的 view */
 export declare type AWRouteLayout<T = {}> = React.ComponentType<RouteComponentProps & LayoutProps & T>;
 export declare type AWRouteComponent = AWRouteLayout;
@@ -15,24 +15,24 @@ export interface LayoutProps {
     routerView: AWRouteViewFunc;
 }
 /** 路由配置 */
-export interface AWRouteConfig<Meta = any> {
+export interface AWRouteConfig<Meta = {}> {
     name: string;
     component: AWRouteComponent;
     path?: string;
     children?: AWRouteConfig<Meta>[];
     default?: boolean;
-    middlewares?: AWMiddlewareFunc[];
+    middlewares?: AWMiddlewareFunc<Meta>[];
     meta?: Meta;
 }
 /** 路由信息 */
-export interface AWRouteInfo<Meta = any> {
+export interface AWRouteInfo<Meta = {}> {
     readonly fullPath: string;
     readonly name: string;
     default?: boolean;
     readonly meta: Readonly<Meta>;
 }
 /** 路由状态 */
-export interface AWRouteState<Meta = any> {
+export interface AWRouteState<Meta = {}> {
     readonly fullPath: string;
     readonly name: string;
     readonly meta: Readonly<Meta>;

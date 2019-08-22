@@ -8,7 +8,7 @@ export type AWRouteViewFunc = () => JSX.Element[] | JSX.Element;
  * 中间件函数
  * 返回值不为 null 时，中断中间件，渲染 view
  */
-export type AWMiddlewareFunc = (params: AWRouteState<any>) => null | JSX.Element;
+export type AWMiddlewareFunc<Meta = {}> = (params: AWRouteState<Meta>) => null | JSX.Element;
 
 /** 路由渲染的 view */
 export type AWRouteLayout<T = {}> = React.ComponentType<RouteComponentProps & LayoutProps & T>
@@ -20,7 +20,7 @@ export interface LayoutProps {
 }
 
 /** 路由配置 */
-export interface AWRouteConfig<Meta = any> {
+export interface AWRouteConfig<Meta = {}> {
   name: string
   component: AWRouteComponent
 
@@ -31,12 +31,12 @@ export interface AWRouteConfig<Meta = any> {
   // 如 true 时配置了 path，则会生成一个匹配父路由 path 的 exact 子路由，渲染的时该默认子路由的 component
   default?: boolean
 
-  middlewares?: AWMiddlewareFunc[] // 路由中间件
+  middlewares?: AWMiddlewareFunc<Meta>[] // 路由中间件
   meta?: Meta
 }
 
 /** 路由信息 */
-export interface AWRouteInfo<Meta = any> {
+export interface AWRouteInfo<Meta = {}> {
   readonly fullPath: string
   readonly name: string
   default?: boolean // 默认子路由
@@ -44,7 +44,7 @@ export interface AWRouteInfo<Meta = any> {
 }
 
 /** 路由状态 */
-export interface AWRouteState<Meta = any> {
+export interface AWRouteState<Meta = {}> {
   readonly fullPath: string
   readonly name: string
   readonly meta: Readonly<Meta>
