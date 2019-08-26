@@ -52,9 +52,9 @@ export interface AWRouteState<Meta = {}> {
 }
 
 /** AWRouter 的配置参数 */
-export interface AWRouterOptions {
+export interface AWRouterOptions<Meta = {}> {
   mode?: 'hash' | 'history'
-  middlewares?: AWMiddlewareFunc[]
+  middlewares?: AWMiddlewareFunc<Meta>[]
   notFoundRouteName?: string // 404 路由的 name
 }
 

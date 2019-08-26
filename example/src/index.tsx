@@ -2,16 +2,6 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
 
-import { routes } from './routes';
-
-const App = () => {
-  return (
-    <>
-      {
-        routes
-      }
-    </>
-  );
-};
+import App from './base';
 
 ReactDOM.render(<App />, document.getElementById('root'));

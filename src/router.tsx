@@ -40,7 +40,7 @@ class AWRouter<Meta = {}> {
   // private cachedRouteNameList: string[] = [];
 
   /** 加载路由 */
-  public load(routes: AWRouteConfig<Meta>[], options: AWRouterOptions = {}): AWRouter<Meta> {
+  public load(routes: AWRouteConfig<Meta>[], options: AWRouterOptions<Meta> = {}): AWRouter<Meta> {
     if (this.routes.length) {
       throw new Error('AWRouter load error: 路由已经加载过了');
     }

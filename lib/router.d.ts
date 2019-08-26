@@ -17,7 +17,7 @@ declare class AWRouter<Meta = {}> {
     private notFoundRouteName;
     /** 需要被缓存的路由 name */
     /** 加载路由 */
-    load(routes: AWRouteConfig<Meta>[], options?: AWRouterOptions): AWRouter<Meta>;
+    load(routes: AWRouteConfig<Meta>[], options?: AWRouterOptions<Meta>): AWRouter<Meta>;
     /** 渲染 routes */
     render(name?: string): AWRouteViewFunc;
     /** render view 方法 */

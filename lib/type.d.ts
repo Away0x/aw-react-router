@@ -39,9 +39,9 @@ export interface AWRouteState<Meta = {}> {
     readonly route: Readonly<RouteComponentProps>;
 }
 /** AWRouter 的配置参数 */
-export interface AWRouterOptions {
+export interface AWRouterOptions<Meta = {}> {
     mode?: 'hash' | 'history';
-    middlewares?: AWMiddlewareFunc[];
+    middlewares?: AWMiddlewareFunc<Meta>[];
     notFoundRouteName?: string;
 }
 /** router view 的配置 */
